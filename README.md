@@ -2,14 +2,16 @@
 
 ### 導入手順
 
-1. [JoyconLib](https://github.com/Looking-Glass/JoyconLib) を導入する  
-zip をダウンロードして `JoyconLib-master/Packages/con.lookingglass.joyconlib/JoyconLib_scripts` をプロジェクトに追加する
+1. [JoyconLib](https://github.com/tenonno/JoyconLib/releases) を導入する  
+リリースページから最新の `JoyconLib.unitypackage` をダウンロードしてインポートする  
 1. [Unity-Wiimote](https://github.com/Flafla2/Unity-Wiimote) を導入する  
 zip をダウンロードして `Unity-Wiimote-master/Assets/Wiimote/Plugins/(OS)/hidapi.(dll|bundle)` をプロジェクトに追加する  
 windows なら `win64/hidapi.dll`, mac なら `mac/hidapi.bundle`
 1. [VoxHands](https://github.com/hiroki-o/VoxHands) を導入する  
 zip をダウンロードして `VoxHands-master/Assets` をプロジェクトに追加する  
-![preview](https://i.gyazo.com/4d174fe4eb298e3e422d6c1c4829d2f4.png)
+![preview](https://i.gyazo.com/4d174fe4eb298e3e422d6c1c4829d2f4.png)  
+1. [UniRx](https://github.com/neuecc/UniRx/releases) を導入する  
+リリースページから最新の `UniRx.unitypackage` をダウンロードしてインポートする  
 1. [VrmHandJoyController](https://github.com/tenonno/VrmHandJoyController/releases) を導入する  
 リリースページから最新の `VrmHandJoyController.unitypackage` をダウンロードしてインポートする  
 

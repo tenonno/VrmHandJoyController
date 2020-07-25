@@ -7,24 +7,14 @@ namespace VrmHandJoyController
     [CustomEditor(typeof(VrmHandJoyController))]
     public sealed class VrmHandJoyControllerEditor : Editor
     {
-        private bool _foldoutDefaultHandPose;
-
-        private HandPoseDataEditorUtility _defaultHandPoseUtility;
-
         private Joycon.Button[] _joyconButtons;
-
-        private SerializedProperty _buttonsProperty;
+        private SerializedProperty _modelProperty;
+        private SerializedProperty _defaultHandPoseProperty;
+        private SerializedProperty _leftHandPosesProperty;
+        private SerializedProperty _rightHandPosesProperty;
         private SerializedProperty _lerpCoefficientProperty;
         private SerializedProperty _keepRootBonePositionProperty;
-
-        private HandPoseDataEditorUtility[] _defaultHandPoseUtility2;
-
-        private bool[] _openedButton;
-
-        private SerializedProperty[] _buttonEnabledProperties;
-
         private bool _showBaseInspector;
-
         private bool _foldoutHandPose;
         private bool _foldoutDebug;
 
@@ -34,29 +24,17 @@ namespace VrmHandJoyController
 
             _joyconButtons = Enum.GetValues(typeof(Joycon.Button)) as Joycon.Button[];
 
-            _defaultHandPoseUtility = new HandPoseDataEditorUtility(serializedObject, "_defaultHandPose.", false);
+            _modelProperty = serializedObject.FindProperty("_model");
+            _defaultHandPoseProperty = serializedObject.FindProperty("_defaultHandPose");
 
-            _buttonsProperty = serializedObject.FindProperty("_buttons");
+            _leftHandPosesProperty = serializedObject.FindProperty("_leftHandPoses");
+            _rightHandPosesProperty = serializedObject.FindProperty("_rightHandPoses");
+
             _lerpCoefficientProperty = serializedObject.FindProperty("_lerpCoefficient");
             _keepRootBonePositionProperty = serializedObject.FindProperty("_keepRootBonePosition");
 
-            _defaultHandPoseUtility2 = new HandPoseDataEditorUtility[_joyconButtons.Length];
-            _openedButton = new bool[_joyconButtons.Length];
-
-            _buttonsProperty.arraySize = _joyconButtons.Length;
-            for (var i = 0; i < _joyconButtons.Length; i++)
-            {
-                _buttonsProperty.GetArrayElementAtIndex(i).FindPropertyRelative("_button").enumValueIndex = i;
-                _defaultHandPoseUtility2[i] =
-                    new HandPoseDataEditorUtility(serializedObject, $"_buttons.Array.data[{i}].", true);
-            }
-
-            _buttonEnabledProperties = new SerializedProperty[_buttonsProperty.arraySize];
-            for (int i = 0; i < _buttonsProperty.arraySize; i++)
-            {
-                _buttonEnabledProperties[i] =
-                    _buttonsProperty.GetArrayElementAtIndex(i).FindPropertyRelative("_enabled");
-            }
+            _leftHandPosesProperty.arraySize = _joyconButtons.Length;
+            _rightHandPosesProperty.arraySize = _joyconButtons.Length;
 
             serializedObject.ApplyModifiedProperties();
         }
@@ -65,16 +43,8 @@ namespace VrmHandJoyController
         {
             serializedObject.Update();
 
-            EditorGUILayout.PropertyField(serializedObject.FindProperty("_model"), new GUIContent("Model"));
-
-            _foldoutDefaultHandPose = EditorGUILayout.Foldout(_foldoutDefaultHandPose, "Default Hand Pose");
-
-            if (_foldoutDefaultHandPose)
-            {
-                EditorGUI.indentLevel++;
-                _defaultHandPoseUtility.DrawGui();
-                EditorGUI.indentLevel--;
-            }
+            EditorGUILayout.PropertyField(_modelProperty, new GUIContent("Model"));
+            EditorGUILayout.PropertyField(_defaultHandPoseProperty, new GUIContent("Default Hand Pose"));
 
             _foldoutHandPose = EditorGUILayout.Foldout(_foldoutHandPose, "Hand Pose Setting");
             if (_foldoutHandPose)
@@ -84,18 +54,23 @@ namespace VrmHandJoyController
                 var i = 0;
                 foreach (Joycon.Button button in Enum.GetValues(typeof(Joycon.Button)))
                 {
-                    var enabled = _buttonEnabledProperties[i].boolValue;
-                    var suffix = enabled ? " ✔︎" : "";
+                    EditorGUILayout.BeginVertical(GUI.skin.box);
 
-                    _openedButton[i] = EditorGUILayout.Foldout(_openedButton[i], button + suffix);
+                    GUILayout.Label(button.ToString());
 
-                    if (_openedButton[i])
-                    {
-                        EditorGUI.indentLevel++;
-                        _defaultHandPoseUtility2[i].DrawGui();
-                        EditorGUI.indentLevel--;
-                    }
+                    EditorGUILayout.BeginHorizontal();
 
+                    EditorGUI.indentLevel++;
+                    GUILayout.Label("Left");
+                    EditorGUILayout.PropertyField(_leftHandPosesProperty.GetArrayElementAtIndex(i), GUIContent.none);
+
+                    GUILayout.Label("Right");
+                    EditorGUILayout.PropertyField(_rightHandPosesProperty.GetArrayElementAtIndex(i), GUIContent.none);
+
+                    EditorGUI.indentLevel--;
+                    EditorGUILayout.EndHorizontal();
+
+                    EditorGUILayout.EndVertical();
                     i++;
                 }
 
@@ -104,7 +79,6 @@ namespace VrmHandJoyController
 
             EditorGUILayout.PropertyField(_lerpCoefficientProperty, new GUIContent("Lerp Coefficient"));
             EditorGUILayout.PropertyField(_keepRootBonePositionProperty, new GUIContent("Keep Root Bone Position"));
-
 
             EditorGUILayout.BeginVertical(GUI.skin.box);
 

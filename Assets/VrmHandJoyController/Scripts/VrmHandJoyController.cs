@@ -8,8 +8,9 @@ namespace VrmHandJoyController
     public sealed class VrmHandJoyController : MonoBehaviour
     {
         [SerializeField] private VRMMeta _model;
-        [SerializeField] private HandPose[] _buttons;
-        [SerializeField] HandPoseData _defaultHandPose;
+        [SerializeField] HandPosePreset _defaultHandPose;
+        [SerializeField] HandPosePreset[] _leftHandPoses;
+        [SerializeField] HandPosePreset[] _rightHandPoses;
         [SerializeField] private float _lerpCoefficient = 0.2f;
         [SerializeField] private bool _keepRootBonePosition = true;
 
@@ -19,8 +20,8 @@ namespace VrmHandJoyController
         private HandPoseData _leftHandPoseData;
         private HandPoseData _rightHandPoseData;
 
-        public bool IsConnectedLeftJoyCon { get; private set; } = false;
-        public bool IsConnectedRightJoyCon { get; private set; } = false;
+        public bool IsConnectedLeftJoyCon { get; private set; }
+        public bool IsConnectedRightJoyCon { get; private set; }
 
         private FingerPoseData LerpFingerPoseData(FingerPoseData a, FingerPoseData b, float t)
         {
@@ -69,8 +70,8 @@ namespace VrmHandJoyController
 
         private void UpdateJoycons()
         {
-            var targetLeftHandPoseData = _defaultHandPose;
-            var targetRightHandPoseData = _defaultHandPose;
+            var targetLeftHandPoseData = _defaultHandPose?.HandPoseData ?? new HandPoseData();
+            var targetRightHandPoseData = _defaultHandPose?.HandPoseData ?? new HandPoseData();
 
             var joycons = JoyconManager.Instance.j;
             if (joycons == null)
@@ -85,18 +86,20 @@ namespace VrmHandJoyController
                 if (joycon.isLeft) IsConnectedLeftJoyCon = true;
                 else IsConnectedRightJoyCon = true;
 
-                foreach (var button in _buttons)
+                var handPoses = joycon.isLeft ? _leftHandPoses : _rightHandPoses;
+
+                for (var i = 0; i < handPoses.Length; i++)
                 {
-                    if (!button.Enabled) continue;
-                    if (!joycon.GetButton(button.Button)) continue;
+                    if (!handPoses[i]) continue;
+                    if (!joycon.GetButton((Joycon.Button)i)) continue;
 
                     if (joycon.isLeft)
                     {
-                        targetLeftHandPoseData = button.Mix(targetLeftHandPoseData);
+                        targetLeftHandPoseData = handPoses[i].Mix(targetLeftHandPoseData);
                     }
                     else
                     {
-                        targetRightHandPoseData = button.Mix(targetRightHandPoseData);
+                        targetRightHandPoseData = handPoses[i].Mix(targetRightHandPoseData);
                     }
                 }
             }

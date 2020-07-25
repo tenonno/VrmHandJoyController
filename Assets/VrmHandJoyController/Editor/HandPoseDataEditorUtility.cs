@@ -12,8 +12,7 @@ namespace VrmHandJoyController
         private FingerProperties[] _fingers;
         private bool[] _foldouts;
 
-        private SerializedProperty _handPoseEnabledArrayProperty;
-        private SerializedProperty _enabledProperty;
+        private SerializedProperty _fingerEnabledArrayProperty;
 
         private bool _joyConMode;
 
@@ -45,11 +44,9 @@ namespace VrmHandJoyController
         {
             if (joyConMode)
             {
-                _enabledProperty = serializedObject.FindProperty(rootPropertyPath + "_enabled");
-                _handPoseEnabledArrayProperty =
-                    serializedObject.FindProperty(rootPropertyPath + "_handPoseEnabledArray");
+                _fingerEnabledArrayProperty = serializedObject.FindProperty(rootPropertyPath + "_fingerEnabledArray");
                 rootPropertyPath += "_handPose.";
-                _handPoseEnabledArrayProperty.arraySize = 5;
+                _fingerEnabledArrayProperty.arraySize = 5;
             }
 
             _fingers = new[]
@@ -67,11 +64,6 @@ namespace VrmHandJoyController
 
         public void DrawGui()
         {
-            if (_joyConMode)
-            {
-                EditorGUILayout.PropertyField(_enabledProperty, new GUIContent("Enabled"));
-            }
-
             var allSpreadValue = AllSpread;
             var newAllSpreadValue = EditorGUILayout.Slider("Spread", allSpreadValue, -1f, 1f);
             if (allSpreadValue != newAllSpreadValue)
@@ -92,7 +84,7 @@ namespace VrmHandJoyController
 
                 var suffix = "";
 
-                if (_joyConMode && _handPoseEnabledArrayProperty.GetArrayElementAtIndex(i).boolValue)
+                if (_joyConMode && _fingerEnabledArrayProperty.GetArrayElementAtIndex(i).boolValue)
                 {
                     suffix = " ✔︎";
                 }
@@ -105,7 +97,7 @@ namespace VrmHandJoyController
 
                 if (_joyConMode)
                 {
-                    EditorGUILayout.PropertyField(_handPoseEnabledArrayProperty.GetArrayElementAtIndex(i),
+                    EditorGUILayout.PropertyField(_fingerEnabledArrayProperty.GetArrayElementAtIndex(i),
                         new GUIContent("Enabled"));
                 }
 

@@ -55,5 +55,4 @@ Project ウィンドウの任意のディレクトリで右クリック -> Creat
 `JoyCon Status`: JoyCon が接続できているなら True, できていないなら False が表示される   
 
 ### 再生しながら手の動きを調整する
-Unity を再生しながら `Hand Pose Setting` などを調整することでリアルタイムに手の動きを確認することができるが、再生中に編集した値は再生を止めるとリセットされてしまう  
-再生中に編集した値を保持したい場合は、再生中に `VrmHandJoyController` コンポーネントの右上のメニューから `Copy Component` を選択して値をコピーして、再生を止めた後に `Paste Component Value` で値を貼り付けることができる  
+Unity を再生しながら `HandPosePreset` のパラメータを調整することでリアルタイムに手の動きを確認することができる

@@ -14,6 +14,8 @@ namespace VrmHandJoyController
         private SerializedProperty _rightHandPosesProperty;
         private SerializedProperty _lerpCoefficientProperty;
         private SerializedProperty _keepRootBonePositionProperty;
+        private SerializedProperty _leftHandSourceProperty;
+        private SerializedProperty _rightHandSourceProperty;
         private bool _showBaseInspector;
         private bool _foldoutHandPose;
         private bool _foldoutDebug;
@@ -32,6 +34,9 @@ namespace VrmHandJoyController
 
             _lerpCoefficientProperty = serializedObject.FindProperty("_lerpCoefficient");
             _keepRootBonePositionProperty = serializedObject.FindProperty("_keepRootBonePosition");
+
+            _leftHandSourceProperty = serializedObject.FindProperty("_leftHandSource");
+            _rightHandSourceProperty = serializedObject.FindProperty("_rightHandSource");
 
             _leftHandPosesProperty.arraySize = _joyconButtons.Length;
             _rightHandPosesProperty.arraySize = _joyconButtons.Length;
@@ -76,6 +81,22 @@ namespace VrmHandJoyController
 
                 EditorGUI.indentLevel--;
             }
+
+            EditorGUILayout.BeginVertical(GUI.skin.box);
+
+            GUILayout.Label("Hand Source");
+
+            EditorGUILayout.BeginHorizontal();
+
+            GUILayout.Label("Left");
+            EditorGUILayout.PropertyField(_leftHandSourceProperty, GUIContent.none);
+
+            GUILayout.Label("Right");
+            EditorGUILayout.PropertyField(_rightHandSourceProperty, GUIContent.none);
+
+            EditorGUILayout.EndHorizontal();
+
+            EditorGUILayout.EndVertical();
 
             EditorGUILayout.PropertyField(_lerpCoefficientProperty, new GUIContent("Lerp Coefficient"));
             EditorGUILayout.PropertyField(_keepRootBonePositionProperty, new GUIContent("Keep Root Bone Position"));

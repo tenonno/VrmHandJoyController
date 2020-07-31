@@ -1,4 +1,5 @@
-﻿using UniRx;
+﻿using System;
+using UniRx;
 using UnityEngine;
 using Vox.Hands;
 using VRM;
@@ -13,12 +14,16 @@ namespace VrmHandJoyController
         [SerializeField] HandPosePreset[] _rightHandPoses;
         [SerializeField] private float _lerpCoefficient = 0.2f;
         [SerializeField] private bool _keepRootBonePosition = true;
+        [SerializeField] private HandSourceType _leftHandSource = HandSourceType.Left;
+        [SerializeField] private HandSourceType _rightHandSource = HandSourceType.Right;
 
         private HandController _leftHandController;
         private HandController _rightHandController;
 
         private HandPoseData _leftHandPoseData;
         private HandPoseData _rightHandPoseData;
+
+        private HandPoseData DefaultHandPose => _defaultHandPose?.HandPoseData ?? new HandPoseData();
 
         public bool IsConnectedLeftJoyCon { get; private set; }
         public bool IsConnectedRightJoyCon { get; private set; }
@@ -70,8 +75,8 @@ namespace VrmHandJoyController
 
         private void UpdateJoycons()
         {
-            var targetLeftHandPoseData = _defaultHandPose?.HandPoseData ?? new HandPoseData();
-            var targetRightHandPoseData = _defaultHandPose?.HandPoseData ?? new HandPoseData();
+            var targetLeftHandPoseData = DefaultHandPose;
+            var targetRightHandPoseData = DefaultHandPose;
 
             var joycons = JoyconManager.Instance.j;
             if (joycons == null)
@@ -107,8 +112,37 @@ namespace VrmHandJoyController
             _leftHandPoseData = LerpHandPoseData(_leftHandPoseData, targetLeftHandPoseData, _lerpCoefficient);
             _rightHandPoseData = LerpHandPoseData(_rightHandPoseData, targetRightHandPoseData, _lerpCoefficient);
 
-            _leftHandController.SetHandPose(ref _leftHandPoseData);
-            _rightHandController.SetHandPose(ref _rightHandPoseData);
+            switch (_leftHandSource)
+            {
+                case HandSourceType.None:
+                    var defaultHandPose = DefaultHandPose;
+                    _leftHandController.SetHandPose(ref defaultHandPose);
+                    break;
+                case HandSourceType.Left:
+                    _leftHandController.SetHandPose(ref _leftHandPoseData);
+                    break;
+                case HandSourceType.Right:
+                    _leftHandController.SetHandPose(ref _rightHandPoseData);
+                    break;
+                default:
+                    throw new ArgumentOutOfRangeException();
+            }
+
+            switch (_rightHandSource)
+            {
+                case HandSourceType.None:
+                    var defaultHandPose = DefaultHandPose;
+                    _rightHandController.SetHandPose(ref defaultHandPose);
+                    break;
+                case HandSourceType.Left:
+                    _rightHandController.SetHandPose(ref _leftHandPoseData);
+                    break;
+                case HandSourceType.Right:
+                    _rightHandController.SetHandPose(ref _rightHandPoseData);
+                    break;
+                default:
+                    throw new ArgumentOutOfRangeException();
+            }
         }
 
         private void Update()

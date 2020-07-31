@@ -74,4 +74,5 @@ MonoBehaviour:
   - {fileID: 0}
   - {fileID: 0}
   _lerpCoefficient: 0.2
-  _keepRootBonePosition: 1
+  _leftHandSource: 1
+  _rightHandSource: 2

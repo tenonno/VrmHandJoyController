@@ -1,5 +1,4 @@
 ﻿using System;
-using UniRx;
 using UnityEngine;
 using Vox.Hands;
 using VRM;
@@ -13,7 +12,6 @@ namespace VrmHandJoyController
         [SerializeField] HandPosePreset[] _leftHandPoses;
         [SerializeField] HandPosePreset[] _rightHandPoses;
         [SerializeField] private float _lerpCoefficient = 0.2f;
-        [SerializeField] private bool _keepRootBonePosition = true;
         [SerializeField] private HandSourceType _leftHandSource = HandSourceType.Left;
         [SerializeField] private HandSourceType _rightHandSource = HandSourceType.Right;
 
@@ -59,18 +57,6 @@ namespace VrmHandJoyController
             _leftHandController.Hand = HandType.LeftHand;
             _rightHandController = _model.gameObject.AddComponent<HandController>();
             _rightHandController.Hand = HandType.RightHand;
-
-
-            if (_keepRootBonePosition)
-            {
-                var renderer = _model.GetComponentInChildren<SkinnedMeshRenderer>();
-                var initialPosition = renderer.rootBone.position;
-
-                renderer.rootBone.ObserveEveryValueChanged(x => x.position).Skip(1).First().Subscribe(newPosition =>
-                {
-                    _model.transform.position += initialPosition - newPosition;
-                });
-            }
         }
 
         private void UpdateJoycons()

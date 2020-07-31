@@ -13,7 +13,6 @@ namespace VrmHandJoyController
         private SerializedProperty _leftHandPosesProperty;
         private SerializedProperty _rightHandPosesProperty;
         private SerializedProperty _lerpCoefficientProperty;
-        private SerializedProperty _keepRootBonePositionProperty;
         private SerializedProperty _leftHandSourceProperty;
         private SerializedProperty _rightHandSourceProperty;
         private bool _showBaseInspector;
@@ -33,7 +32,6 @@ namespace VrmHandJoyController
             _rightHandPosesProperty = serializedObject.FindProperty("_rightHandPoses");
 
             _lerpCoefficientProperty = serializedObject.FindProperty("_lerpCoefficient");
-            _keepRootBonePositionProperty = serializedObject.FindProperty("_keepRootBonePosition");
 
             _leftHandSourceProperty = serializedObject.FindProperty("_leftHandSource");
             _rightHandSourceProperty = serializedObject.FindProperty("_rightHandSource");
@@ -99,7 +97,6 @@ namespace VrmHandJoyController
             EditorGUILayout.EndVertical();
 
             EditorGUILayout.PropertyField(_lerpCoefficientProperty, new GUIContent("Lerp Coefficient"));
-            EditorGUILayout.PropertyField(_keepRootBonePositionProperty, new GUIContent("Keep Root Bone Position"));
 
             EditorGUILayout.BeginVertical(GUI.skin.box);
 

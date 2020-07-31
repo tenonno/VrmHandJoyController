@@ -49,7 +49,7 @@ Project ウィンドウの任意のディレクトリで右クリック -> Creat
 
 ### その他の設定
 `Lerp Coeffcient`: 手の形を滑らかに変える処理の係数 (0.0 ~ 1.0), 小さいとゆっくり、大きいと速く形が変わる  
-`Keep Root Bone Position`: RootBone の位置を保つようにするか, 内部で Animator を使う影響でモデルの位置がずれる場合の対策  
+`Hand Source`: ジョイコンの入力を左右のどちらの手に割り当てるか指定する
 `JoyCon Status`: JoyCon が接続できているなら True, できていないなら False が表示される   
 
 ### 再生しながら手の動きを調整する

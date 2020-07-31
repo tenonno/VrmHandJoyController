@@ -10,8 +10,6 @@ windows なら `win64/hidapi.dll`, mac なら `mac/hidapi.bundle`
 1. [VoxHands](https://github.com/hiroki-o/VoxHands) を導入する  
 zip をダウンロードして `VoxHands-master/Assets` をプロジェクトに追加する  
 ![preview](https://i.gyazo.com/4d174fe4eb298e3e422d6c1c4829d2f4.png)  
-1. [UniRx](https://github.com/neuecc/UniRx/releases) を導入する  
-リリースページから最新の `UniRx.unitypackage` をダウンロードしてインポートする  
 1. [VrmHandJoyController](https://github.com/tenonno/VrmHandJoyController/releases) を導入する  
 リリースページから最新の `VrmHandJoyController.unitypackage` をダウンロードしてインポートする  
 
